@@ -1,0 +1,10 @@
+* {
+	font-family: 'Abril Fatface';
+}
+.clear {
+	clear: both !important;
+}
+#app {
+	margin: 6em auto;
+		color: #3582ff;
+}
