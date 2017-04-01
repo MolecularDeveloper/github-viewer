@@ -1,10 +1,15 @@
 * {
-	font-family: 'Abril Fatface';
+	font-family: 'Open Sans';
 }
 .clear {
 	clear: both !important;
 }
 #app {
 	margin: 6em auto;
-		color: #3582ff;
+}
+.label {
+	margin-right:  10px;
+}
+.repo-item {
+	text-align:  left;
 }

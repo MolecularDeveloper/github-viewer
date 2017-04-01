@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Profile from './github/Profile.jsx';
+import Search from './github/Search.jsx';
 //most programming logic goes in here 
 class App extends Component {
 	constructor(props) {
@@ -9,9 +10,18 @@ class App extends Component {
 			username: 'moleculardeveloper',
 			userData: [],
 			userRepos: [],
-			perPage: 3 
+			perPage:4
 		}
 	}
+	handleFormSubmit(username) {
+		this.setState({
+			username: username
+		}, function() {
+			this.getUserData();
+			this.getUserRepos();
+		})
+	}
+	//grab user data from github
 	getUserData() {
 		$.ajax({
 			url: 'https://api.github.com/users/'+this.state.username+'?client_id='+this.props.clientId+'&client_secret='+this.props.clientSecret,
@@ -19,21 +29,38 @@ class App extends Component {
 			cache: false,
 			success: function(data) {
 				this.setState({userData: data});
-				console.log(data);
 			}.bind(this),
 			error: function(xhr, status, error) {
 				this.setState({username: null})
-				console.log(error);
 			}.bind(this)
 		});
 	}
+
+	getUserRepos() {
+		$.ajax({
+			url: 'https://api.github.com/users/'+this.state.username+'/repos?per_page='+this.state.perPage+'&client_id='+this.props.clientId+'&client_secret='+this.props.clientSecret+'&sort=created',
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				this.setState({userRepos: data});
+			}.bind(this),
+			error: function(xhr, status, error) {
+				this.setState({username: null})
+			}.bind(this)
+		});
+	}
+
 	componentDidMount() {
 		this.getUserData();
+		this.getUserRepos();
 	}
 
 	render() {
 		return (
-				<div><Profile userData= {this.state.userData} /></div>
+				<div>
+					<Search onFormSubmit={this.handleFormSubmit.bind(this)} />
+					<Profile {...this.state} />
+				</div>
 			)
 	}
 }
